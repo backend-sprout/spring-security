@@ -41,7 +41,7 @@ public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)
     successfulAuthentication(request, response, chain, +authResult);
 }
 ```
-```
+```java
 public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
     if (postOnly && !request.getMethod().equals("POST")) { 
         throw new AuthenticationServiceException("Authentication method not supported: " + request.getMethod());
