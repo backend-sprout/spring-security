@@ -26,8 +26,9 @@ RememberMeService 구현체로는 2가지가 있는데 설명은 아래와 같�
 
 * TokenBasedRememberMeServices : 메모리에 RememberMe 쿠키(토큰)를 저장한 경우에 사용     
 * PersistenceTokenBasedRememberMeServices : DB에 RememberMe 쿠키(토큰) 저장한 경우에 사용     
+   
+RememberMeService 구현체들은 저장소 및 사용자의 RememberMe 쿠키(토큰)와 비교하는 작업을 진행한다.    
 
-각각의 RememberMeService 구현체들은 RememberMe 쿠키(토큰)를 가져와 사용자 RememberMe 쿠키(토큰)와 비교한다.   
 
 
 
