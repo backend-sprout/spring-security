@@ -21,7 +21,7 @@ public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)
     try {
         // 구현체마다 알아서 가져온다 -> Filter구현체가 연관된 Provider 구현체 호출 로직 사용
 	// provider는 request/response 로부터 ID/Password/토큰 과 같은 정보를 토대로 SecutiryContext 조회
-	// 알맞는 값이 있으면 
+	// 알맞는 값이 있으면 User 와 Autheority 를 담은 Authentication 반환 없으면 Null 반환 
         authResult = attemptAuthentication(request, response);
         if (authResult == null) {
 	    return;
