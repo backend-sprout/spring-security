@@ -52,7 +52,8 @@ Token에 들어있는 사용자 정보를 통해서 메모리/DB에서 User 정�
 그리고 RemeberMeAuthentication를 AuthenticationManager에게 전달하여      
 기존 인증 정보 프로세스가 잘 동작하도록 한다.        
 
-
+# 단점과 해결법  
+https://infondgndg91.blogspot.com/2020/06/spring-security-userdetailsservice-with.html
 
 
 
