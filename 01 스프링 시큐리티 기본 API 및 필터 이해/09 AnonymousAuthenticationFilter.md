@@ -2,6 +2,12 @@ AnonymousAuthenticationFilter
 ===============================
 ![image](https://user-images.githubusercontent.com/50267433/129204106-4afc0a7c-9001-480e-9a46-19f623705d14.png)
 
+
+* 익명사용자 인증 처리 필터 
+* 익명사용자와 인증 사용자를 구분해서 처리하기 위한 용도로 사용  
+* 화면에서 인증 여부를 구현할 때 isAnonymous()와 isAuthenticated()로 구분해서 사용
+* 인증객체를 세션에 저장하지 않는다.   
+  
 # AnonymousAuthenticationFilter  
 인증 과정은 주로 아래와 같다.   
 
@@ -16,11 +22,32 @@ AnonymousAuthenticationFilter
 그러나 `AnonymousAuthenticationFilter`는 Null 대신 별도의 **익명 사용자 인증 객체를 만들어 처리한다.**       
 
 
+```java
+public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
+    if (SecurityContextHolder.getContext().getAuthentication() == null) {
+        SecurityContextHolder.getContext().setAuthentication(createAuthentication((HttpServletRequest) req));
+        if (logger.isDebugEnabled()) {
+            logger.debug("Populated SecurityContextHolder with anonymous token: '"
+                + SecurityContextHolder.getContext().getAuthentication() + "'");
+			}
+    } else {
+        if (logger.isDebugEnabled()) {
+            logger.debug("SecurityContextHolder not populated with anonymous token, as it already contained: '"
+                + SecurityContextHolder.getContext().getAuthentication() + "'");
+        }
+    }
+    chain.doFilter(req, res);
+}
+
+protected Authentication createAuthentication(HttpServletRequest request) {
+    AnonymousAuthenticationToken auth = new AnonymousAuthenticationToken(key, principal, authorities);
+    auth.setDetails(authenticationDetailsSource.buildDetails(request));
+    return auth;
+}   
+```
+다른 필터들과 달리 코드를 보면 알 수 있듯이, 
+null 일 경우 return 이 아니라 `AnonymousAuthenticationToken`생성 및 리턴을 하고 있다.    
 
 
-* 익명사용자 인증 처리 필터 
-* 익명사용자와 인증 사용자를 구분해서 처리하기 위한 용도로 사용  
-* 화면에서 인증 여부를 구현할 때 isAnonymous()와 isAuthenticated()로 구분해서 사용
-* 인증객체를 세션에 저장하지 않는다.   
 
 
