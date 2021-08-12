@@ -55,8 +55,40 @@ null 일 경우 return 이 아니라 `AnonymousAuthenticationToken`생성 및 �
 * 익명 : Login 페이지 보여주기 
 * 인증 : Logout 페이지 보여주기  
 
+## chain.doFilter(req, res); 이후 
+`chain.doFilter(req, res);`로 이어지다가 마지막으로 실행되는 클래스는 `AbstractSecurityInterceptor`이다.       
+`AbstractSecurityInterceptor`의 `--Invocation()`관련 메서드 로직을 보면 아래와 같다.     
+   
+```java
+if (SecurityContextHolder.getContext().getAuthentication() == null) {
+    credentialsNotFound(messages.getMessage(
+        "AbstractSecurityInterceptor.authenticationNotFound",
+        "An Authentication object was not found in the SecurityContext"),
+        object, attributes);
+}
+```
+즉, 시큐리티 컨텍스트에서 Authentication 객체를 꺼내서 null인지 아닌지를 검증한다.   
+그리고 `AnonymousAuthenticationToken`는 이러한 로직을 수행하기 위해서 존재한다고 이해하면 된다.   
 
-
+```java
+private Authentication authenticateIfRequired() {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    if (authentication.isAuthenticated() && !alwaysReauthenticate) {
+        if (logger.isDebugEnabled()) {
+	    logger.debug("Previously Authenticated: " + authentication);
+        }
+        return authentication;
+    }
+    authentication = authenticationManager.authenticate(authentication);
+    if (logger.isDebugEnabled()) {
+        logger.debug("Successfully Authenticated: " + authentication);
+    }
+    SecurityContextHolder.getContext().setAuthentication(authentication);
+    return authentication;
+}
+```
+그리고 `authenticateIfRequired()`를 실행하면서 `isAuthenticated()`를 실행하는데      
+여기서 익명 Authentication인지 아닌지 검증하고 이에 알맞는 로직을 수행한다.       
 
 
 
