@@ -46,8 +46,17 @@ protected Authentication createAuthentication(HttpServletRequest request) {
 }   
 ```
 다른 필터들과 달리 코드를 보면 알 수 있듯이,     
-null 일 경우 return 이 아니라 `AnonymousAuthenticationToken`생성 및 리턴을 하고 있다.       
+null 일 경우 return 이 아니라 `AnonymousAuthenticationToken`생성 및 리턴을 하고 있다.           
+이후 `SecurityContextHolder.getContext().setAuthentication()`처럼 시큐리티 컨텍스트에 저장을 한다.          
+참고로, 실제 인증 객체가 아니므로 인증 객체를 `세션`에 저장하지는 않는다.(세션 비어있다.)    
   
+시큐리티는 이후 `isAnonymous()`와 `isAuthenticated()`로 `익명`인지 `인증`인지 구분해서 사용한다.       
+
+* 익명 : Login 페이지 보여주기 
+* 인증 : Logout 페이지 보여주기  
+
+
+
 
 
 
