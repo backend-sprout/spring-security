@@ -35,19 +35,26 @@ RememberMeService 구현체들은 저장소 및 사용자의 RememberMe 쿠키(�
 `RememberMe`가 아닐 경우 `chain.doFilter()`로 다음 필터에게 요청 흐름을 넘긴다.       
 
 ## 📖 토큰 검증  
-### Decode Token     
+### 📄 Decode Token     
 `RememberMe 토큰`는 특정한 형식을 갖추고 있다.     
 그렇기에 `RememberMe 토큰`에 맞는 형식인지 검증한다.         
 만약, 형식이 맞지 않는다면 Exception을 발생시킨다.      
  
-### 양측 Token 비교   
+### 📄 양측 Token 비교   
 양측의 토큰을 비교해서 일치하지 않으면 Exception을 발생시킨다.  
 
-### User 계정 존재 여부 파악   
+### 📄 User 계정 존재 여부 파악   
 Token에 들어있는 사용자 정보를 통해서 메모리/DB에서 User 정보를 조회해본다.     
 만약, User 정보가 없다면 Exception을 발생시킨다.      
 
 ## 📕 새로운 Authentication 생성   
+**RemeberMeAuthentication** 이라는 새로운 인증 정보 객체를 생성한다.          
+그리고 RemeberMeAuthentication를 AuthenticationManager에게 전달하여      
+기존 인증 정보 프로세스가 잘 동작하도록 한다.        
+
+
+
+
 
 
 
