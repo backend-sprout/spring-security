@@ -4,6 +4,13 @@ UsernamePasswordAuthenticationFilter
 
 # 코드 
 ```java
+
+// 구현체마다 알아서 가져온다 -> Filter 구현체는 request로부터 ID/PASSWORD 를 추출 및 이를 통한 Authentication 객체 생성   
+// Filter 구현체 연관된 AuthenticationManger 구현체(ProviderManager)의 authenticate()을 호출하고 생성한 Authentication도 같이 넘긴다.  
+// AuthenticationManger 구현체(ProviderManager)는 여러 Provider 중 사용 가능한 Provider를 찾는다.(AbstractUserDetailsAuthenticationProvider)    
+// AuthenticationManger 구현체(ProviderManager)가 provider를 찾으면 authenticate()를 호출하면서 Authentication 객체도 넘긴다.     
+// provider(AbstractUserDetailsAuthenticationProvider)의 authenticate()이 성공하면 User + Authorities = Authentication 생성 및 반환 실패시 Null 반환 
+	
 public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
     HttpServletRequest request = (HttpServletRequest) req;
     HttpServletResponse response = (HttpServletResponse) res;
@@ -19,9 +26,6 @@ public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)
     // 인증 객체 준비 
     Authentication authResult;
     try {
-        // 구현체마다 알아서 가져온다 -> Filter구현체가 연관된 Provider 구현체 호출 로직 사용
-	// provider는 request/response 로부터 ID/Password/토큰 과 같은 정보를 토대로 SecutiryContext 조회
-	// 알맞는 값이 있으면 User 와 Autheority 를 담은 Authentication 반환 없으면 Null 반환 
         authResult = attemptAuthentication(request, response);
         if (authResult == null) {
 	    return;
