@@ -8,6 +8,7 @@ public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)
     HttpServletRequest request = (HttpServletRequest) req;
     HttpServletResponse response = (HttpServletResponse) res;
     
+    // url 맞는지 확인 
     if (!requiresAuthentication(request, response)) {
         chain.doFilter(request, response);
 	return;
@@ -15,13 +16,17 @@ public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)
     if (logger.isDebugEnabled()) {
         logger.debug("Request is to process authentication");
     }
+    // 인증 객체 준비 
     Authentication authResult;
     try {
+        // 구현체마다 알아서 가져온다 -> Filter구현체가 연관된 Provider 구현체 호출 로직 사용
+	// provider는 request/response 로부터 ID/Password/토큰 과 같은 정보를 토대로 SecutiryContext 조회
+	// 알맞는 값이 있으면 
         authResult = attemptAuthentication(request, response);
         if (authResult == null) {
 	    return;
         }
-    sessionStrategy.onAuthentication(authResult, request, response);
+        sessionStrategy.onAuthentication(authResult, request, response);
     } catch (InternalAuthenticationServiceException failed) {
         logger.error("An internal error occurred while trying to authenticate the user.", failed);
 	unsuccessfulAuthentication(request, response, failed);
@@ -33,7 +38,7 @@ public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)
     if (continueChainBeforeSuccessfulAuthentication) {
         chain.doFilter(request, response);
     }
-    successfulAuthentication(request, response, chain, authResult);
+    successfulAuthentication(request, response, chain, +authResult);
 }
 ```
 
