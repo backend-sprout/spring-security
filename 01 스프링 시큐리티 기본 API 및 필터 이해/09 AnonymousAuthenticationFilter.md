@@ -90,5 +90,15 @@ private Authentication authenticateIfRequired() {
 그리고 `authenticateIfRequired()`를 실행하면서 `isAuthenticated()`를 실행하는데      
 여기서 익명 Authentication인지 아닌지 검증하고 이에 알맞는 로직을 수행한다.       
 
+```java
+try {
+    this.accessDecisionManager.decide(authenticated, object, attributes);
+}
+```
+이후 위 코드를 통해 `인가` 검증 로직을 수행한다.(해단 Path 접근 가능한지)           
+그러나 `익명 Authentication`은 인가 로직을 수행할 수 없기에 이때 에러를 던지고 빠져나온다.     
+
+
+
 
 
