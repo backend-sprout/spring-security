@@ -102,6 +102,22 @@ try {
 else if (exception instanceof AccessDeniedException) {
     Authentication authentication = SecurityContextHolder.getContext().getAuthentication();    
     if (authenticationTrustResolver.isAnonymous(authentication) || authenticationTrustResolver.isRememberMe(authentication)) {
+        logger.debug("Access is denied (user is " + (authenticationTrustResolver.isAnonymous(authentication) ? "anonymous" : "not fully authenticated") + "); 
+                redirecting to authentication entry point", exception);
+        sendStartAuthentication(
+	        request,
+		response,
+		chain,
+		new InsufficientAuthenticationException(
+		messages.getMessage(
+		        "ExceptionTranslationFilter.insufficientAuthentication",
+		        "Full authentication is required to access this resource")));
+    }
+    else {
+        logger.debug("Access is denied (user is not anonymous); delegating to AccessDeniedHandler", exception);
+        accessDeniedHandler.handle(request, response, (AccessDeniedException) exception);
+    }
+}		
 ```
 ```java
 public boolean isAnonymous(Authentication authentication) {
@@ -119,5 +135,7 @@ public boolean isRememberMe(Authentication authentication) {
 }
 ```
 `ExceptionTranslationFilter`의 `handleSpringSecurityException()`를 실행하게 되는데         
-`AuthenticationTrustResolver`의 구현체인 `AuthenticationTrustResolverImpl`의 `isAnonymous`를 호출하게 된다.       
-이를 통해 `익명/리멤버`인지 검증을 하고 이에 알맞는 로직을 수행한다.      
+`AuthenticationTrustResolver`의 구현체인 `AuthenticationTrustResolverImpl`의 `isAnonymous`를 호출하게 된다.        
+이를 통해 `익명/리멤버`인지 검증을 하고 이에 알맞는 로직을 수행한다.(`sendStartAuthentication()`를 통해 로그인 페이지로 이동)     
+
+
