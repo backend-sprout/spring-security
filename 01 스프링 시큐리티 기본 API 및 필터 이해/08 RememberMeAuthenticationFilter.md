@@ -23,12 +23,36 @@ Authentication 이 Null이 아닌 경우는 이미 사용자 인증 정보를 �
 > 세션 정보를 유실했고 RememberMe 쿠키를 가지고 있는 사용자가 요청을 보냈다 가정하자.  
 
 RememberMeAuthenticationFilter는 **RememberMeService 구현체**를 불러와서 사용한다.   
-RememberMeService 구현체로는 2가지가 있는데 설명은 아래와 같다.  
+RememberMeService 구현체로는 2가지가 있는데 아래 설명을 보면 된다.    
 
-* TokenBasedRememberMeServices : 메모리에 RememberMe 쿠키(토큰)를 저장한 경우에 사용     
-* PersistenceTokenBasedRememberMeServices : DB에 RememberMe 쿠키(토큰) 저장한 경우에 사용     
-   
-RememberMeService 구현체들은 저장소 및 사용자의 RememberMe 쿠키(토큰)와 비교하는 작업을 진행한다.    
+* **TokenBasedRememberMeServices :** **메모리**에 RememberMe 쿠키(토큰)를 저장한 경우에 사용(기본 14일)     
+* **PersistenceTokenBasedRememberMeServices :** **DB**에 RememberMe 쿠키(토큰) 저장한 경우에 사용     
+
+RememberMeService 구현체들은 저장소 및 사용자의 RememberMe 쿠키(토큰)와 비교하는 작업을 진행한다.  
+
+## 📖 Token Cookie 추출   
+사용자가 지금 가지고 있는 토큰이 `RememberMe`인지 파악한다.      
+`RememberMe`가 아닐 경우 `chain.doFilter()`로 다음 필터에게 요청 흐름을 넘긴다.       
+
+## 📖 토큰 검증  
+### Decode Token     
+`RememberMe 토큰`는 특정한 형식을 갖추고 있다.     
+그렇기에 `RememberMe 토큰`에 맞는 형식인지 검증한다.         
+만약, 형식이 맞지 않는다면 Exception을 발생시킨다.      
+ 
+### 양측 Token 비교   
+양측의 토큰을 비교해서 일치하지 않으면 Exception을 발생시킨다.  
+
+### User 계정 존재 여부 파악   
+Token에 들어있는 사용자 정보를 통해서 메모리/DB에서 User 정보를 조회해본다.     
+만약, User 정보가 없다면 Exception을 발생시킨다.      
+
+## 📕 새로운 Authentication 생성   
+
+
+
+
+
 
 
 
