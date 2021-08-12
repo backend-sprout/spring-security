@@ -45,9 +45,9 @@ protected Authentication createAuthentication(HttpServletRequest request) {
     return auth;
 }   
 ```
-다른 필터들과 달리 코드를 보면 알 수 있듯이, 
-null 일 경우 return 이 아니라 `AnonymousAuthenticationToken`생성 및 리턴을 하고 있다.    
-
+다른 필터들과 달리 코드를 보면 알 수 있듯이,     
+null 일 경우 return 이 아니라 `AnonymousAuthenticationToken`생성 및 리턴을 하고 있다.       
+  
 
 
 
