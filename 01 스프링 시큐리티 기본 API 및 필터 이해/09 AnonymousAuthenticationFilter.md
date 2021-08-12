@@ -96,9 +96,28 @@ try {
 }
 ```
 이후 위 코드를 통해 `인가` 검증 로직을 수행한다.(해단 Path 접근 가능한지)           
-그러나 `익명 Authentication`은 인가 로직을 수행할 수 없기에 이때 에러를 던지고 빠져나온다.     
+그러나 `익명 Authentication`은 인가 로직을 수행할 수 없기에 `ExceptionTranslationFilter`을 호출하게 된다.   
 
+```java
+else if (exception instanceof AccessDeniedException) {
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();    
+    if (authenticationTrustResolver.isAnonymous(authentication) || authenticationTrustResolver.isRememberMe(authentication)) {
+```
+```java
+public boolean isAnonymous(Authentication authentication) {
+    if ((anonymousClass == null) || (authentication == null)) {
+        return false;
+    }
+    return anonymousClass.isAssignableFrom(authentication.getClass());
+}
 
-
-
-
+public boolean isRememberMe(Authentication authentication) {
+    if ((rememberMeClass == null) || (authentication == null)) {
+        return false;
+    }
+    return rememberMeClass.isAssignableFrom(authentication.getClass());
+}
+```
+`ExceptionTranslationFilter`의 `handleSpringSecurityException()`를 실행하게 되는데         
+`AuthenticationTrustResolver`의 구현체인 `AuthenticationTrustResolverImpl`의 `isAnonymous`를 호출하게 된다.       
+이를 통해 `익명/리멤버`인지 검증을 하고 이에 알맞는 로직을 수행한다.      
