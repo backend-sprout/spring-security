@@ -3,7 +3,7 @@ RememberMeAuthenticationFilter
 
 # 📘 RememberMeAuthenticationFilter란    
 
-![image](https://user-images.githubusercontent.com/50267433/129193728-69784562-30b9-4ddf-baec-4378fae8b473.png)   
+![image](https://user-images.githubusercontent.com/50267433/129357461-c30ac0bc-5701-4444-aa8e-62c427756031.png)
 
 `세션 만료`, `브라우저 종료로 인한 세션 끊김`, `세션 유실`등으로 **인증 정보를 찾지 못하는 경우가 있다.**      
 이로인해 새로운 페이지로 이동시에 **인증 정보를 찾지 못하게 되어 로그 아웃처리가 되는 문제가 발생한다.**       
@@ -20,8 +20,10 @@ RememberMeAuthenticationFilter
 Authentication 이 Null 일 경우에 필터가 동작하는 것인데       
 Authentication 이 Null이 아닌 경우는 이미 사용자 인증 정보를 받았기 때문이다.        
 
-# 📗 RememberMeService   
+## 📗 RememberMeService   
 > 세션 정보를 유실했고 RememberMe 쿠키를 가지고 있는 사용자가 요청을 보냈다 가정하자.  
+
+![image](https://user-images.githubusercontent.com/50267433/129193728-69784562-30b9-4ddf-baec-4378fae8b473.png)   
 
 RememberMeAuthenticationFilter는 **RememberMeService 구현체**를 불러와서 사용한다.   
 RememberMeService 구현체로는 2가지가 있는데 아래 설명을 보면 된다.    
