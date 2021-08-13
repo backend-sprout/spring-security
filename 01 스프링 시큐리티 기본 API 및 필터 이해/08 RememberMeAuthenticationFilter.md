@@ -1,8 +1,9 @@
 RememberMeAuthenticationFilter
 ===============================
-![image](https://user-images.githubusercontent.com/50267433/129193728-69784562-30b9-4ddf-baec-4378fae8b473.png)   
 
-# 📘 RememberMeAuthenticationFilter    
+# 📘 RememberMeAuthenticationFilter란    
+
+![image](https://user-images.githubusercontent.com/50267433/129193728-69784562-30b9-4ddf-baec-4378fae8b473.png)   
 
 `세션 만료`, `브라우저 종료로 인한 세션 끊김`, `세션 유실`등으로 **인증 정보를 찾지 못하는 경우가 있다.**      
 이로인해 새로운 페이지로 이동시에 **인증 정보를 찾지 못하게 되어 로그 아웃처리가 되는 문제가 발생한다.**       
