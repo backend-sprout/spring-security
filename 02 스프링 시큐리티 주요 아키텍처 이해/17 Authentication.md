@@ -291,8 +291,18 @@ AbstractUserDetailsAuthenticationProvider 를 상속한 DaoAuthenticationProvide
 ```java
 SecurityContextHolder.getContext().setAuthentication(authResult);
 ```
-위 코드를 통해 SecurityContext에 저장을 하고 있음을 알 수 있다.         
-이후, 개인적인 생각으로 이벤트 퍼블리셔를 실행해서 AuthenticationInfo 를 저장하지 않나 싶다.       
+위 코드를 통해 SecurityContext에 저장을 하고 있를 활용할 수 있게 되었다.            
+(추가로, 개인적인 생각으로 이벤트 퍼블리셔를 실행해서 AuthenticationInfo 를 저장하지 않나 싶다.)     
+  
+이후 부터는 `AbstractSecurityInterceptor` 인터셉터를 이용해서 값을 불러올 수 있는데    
+
+```java
+Authentication authenticated = authenticateIfRequired();
+    try {
+	this.accessDecisionManager.decide(authenticated, object, attributes);
+    }
+```
+
 
 
 
