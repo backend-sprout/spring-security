@@ -21,9 +21,13 @@ Authentication는 **당신이 누구인지를 증명하는 것이다.**
 ![image](https://user-images.githubusercontent.com/50267433/129443363-6e4e3d0d-b8ff-4774-a7cb-315917ab7975.png)
   
 1. UserNamePasswordAuthenticationFilter 는 Request 정보를 받아서 Authentication 객체를 만든다.     
-2. AuthenticationManger(Provider) 가 인증 객체를 가지고 인증 처리를 진행한다.   
-3. 인증이 성공하면 :
-4. 인증이 실패하면 : 
+2. AuthenticationManger(Provider) 가 인증 객체를 가지고 인증 처리를 진행한다.     
+3. 인증이 성공하면 : Authentication를 새로 만들면서 authorities 추가 및 authenticated 를 true로 한다.       
+   인증이 실패하면 : 더 이상 진행을 막고 예외를 발생시킨다.         
+4. ThreadLocal 에 존재하는 SecurityContext 안에 저장을 한다.    
+5. ThreadLocal 에 존재하기에 전역적으로 사용할 수 있게 된다.   
+
+
 
 
 
