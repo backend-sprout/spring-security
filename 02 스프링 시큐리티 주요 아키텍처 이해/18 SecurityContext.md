@@ -9,9 +9,9 @@ SecurityContext
         
 # SecurityContextHolder      
 * SecurityContext 객체 저장 방식       
-    * MODE_THREADLOCAL : 스레드당 SecurityContext 객체를 할당(기본값)          
-    * MODE_INHERITABLETHREADLOCAL : 메인 스레드와 자식 스레드에 관하여 동일한 SecurityContext를 유지           
-    * MODE_GLOBAL : 응용 프로그램에서 단 하나의 SecurityContext를 저장한다.         
+    * **MODE_THREADLOCAL :** 스레드당 SecurityContext 객체를 할당(기본값)          
+    * **MODE_INHERITABLETHREADLOCAL :** 메인 스레드와 자식 스레드에 관하여 동일한 SecurityContext를 유지           
+    * **MODE_GLOBAL :** 응용 프로그램에서 단 하나의 SecurityContext를 저장한다.         
 * SecurityContextHolder.clearContext(): SecurityContext 기존 정보 초기화        
    
 Authentication authentication = SecurityContextHodler.getContext().getAuthentication()    
