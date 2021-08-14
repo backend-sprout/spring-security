@@ -266,7 +266,38 @@ AbstractUserDetailsAuthenticationProvider 를 상속한 DaoAuthenticationProvide
     }
     successfulAuthentication(request, response, chain, +authResult);
 ```
-`doFilter()`는 넘어온 값이 null 인지 확인하고 
+`doFilter()`는 넘어온 값이 null 인지 확인하고   
+여러 작업을 처리하다가 `successfulAuthentication()`를 호출하면서 Authentication을 넘기는데   
+
+```java
+    protected void successfulAuthentication(HttpServletRequest request,
+                                            HttpServletResponse response, 
+                                            FilterChain chain, 
+                                            Authentication authResult) throws IOException, ServletException {
+        if (logger.isDebugEnabled()) {
+            logger.debug("Authentication success. Updating SecurityContextHolder to contain: "
+                    + authResult);
+        }
+
+        SecurityContextHolder.getContext().setAuthentication(authResult);
+        rememberMeServices.loginSuccess(request, response, authResult);
+
+        if (this.eventPublisher != null) {
+            eventPublisher.publishEvent(new InteractiveAuthenticationSuccessEvent(authResult, this.getClass()));
+        }
+        successHandler.onAuthenticationSuccess(request, response, authResult);
+    }
+```  
+```java
+SecurityContextHolder.getContext().setAuthentication(authResult);
+```
+위 코드를 통해 SecurityContext에 저장을 하고 있음을 알 수 있다.         
+이후, 개인적인 생각으로 이벤트 퍼블리셔를 실행해서 AuthenticationInfo 를 저장하지 않나 싶다.       
+
+
+
+
+
 
 
 
