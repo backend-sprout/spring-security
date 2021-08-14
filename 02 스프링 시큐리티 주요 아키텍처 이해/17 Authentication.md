@@ -65,7 +65,8 @@ public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain)
 UsernamePasswordAuthenticationFilter는 오버 라이딩하지 않은 `doFilter()`    
 즉, 상위 클래스인 AbstractAuthenticationProcessingFilter의 doFilter()를 실행하면서         
 UsernamePasswordAuthenticationFilter이 오버이딩한 `attemptAuthentication()`를 호출한다.      
-
+  
+**UsernamePasswordAuthenticationFilter**    
 ```java
 public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
     if (postOnly && !request.getMethod().equals("POST")) { 
@@ -89,6 +90,7 @@ public Authentication attemptAuthentication(HttpServletRequest request, HttpServ
 `UsernamePasswordAuthenticationToken` 구현체를 통해 `Authentication`객체를 준비한다.(인증 false)       
 이후 `AuthenticationManger`의 구현체인 `ProviderManger`의 `authenticate()`를 호출하면서 작업을 위임한다.       
 
+**ProviderManger**
 ```java
 public Authentication authenticate(Authentication authentication) throws AuthenticationException {
     Class<? extends Authentication> toTest = authentication.getClass();
