@@ -232,15 +232,19 @@ AbstractUserDetailsAuthenticationProvider 를 상속한 DaoAuthenticationProvide
         }
         return createSuccessAuthentication(principalToReturn, authentication, user);
     }
+    
+    protected Authentication createSuccessAuthentication(Object principal, Authentication authentication, UserDetails user) {
+        UsernamePasswordAuthenticationToken result = new UsernamePasswordAuthenticationToken(
+                principal, authentication.getCredentials(),
+                authoritiesMapper.mapAuthorities(user.getAuthorities()));
+        result.setDetails(authentication.getDetails());
+        return result;
+    }    
 ```
-로직이 복잡하지만 `DaoAuthenticationProvider`는 인증이 성공되면 새로운 Authentication의 값을 반환을 한다.   
-
-```java
-```
-
-`ProviderMange`는 알맞은 값을 세팅하고 다시 `UsernamePasswordAuthenticationFilter`값을 넘긴다.     
-`UsernamePasswordAuthenticationFilter`의 `attemptAuthentication()`는 다시 `doFilter()`에 값을 넘긴다.   
-   
+로직이 복잡하지만 `DaoAuthenticationProvider`는 인증이 성공되면 새로운 Authentication의 값을 반환을 한다.     
+이렇게 생성된 `Authentication`는 `ProviderMan`로 넘어가고 `UsernamePasswordAuthenticationFilter`로 넘어간다.         
+그리고 다시 `attemptAuthentication()`는 `doFilter()`에 값을 넘긴다.        
+        
 **UsernamePasswordAuthenticationFilter의 doFilter()**
 ```java
     try {
