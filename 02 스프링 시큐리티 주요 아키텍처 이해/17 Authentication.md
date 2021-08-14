@@ -173,28 +173,26 @@ public Authentication authenticate(Authentication authentication) throws Authent
 ```
 `ProviderMange`는 자신이 참조하고 있는 여러 provider 중에 사용 가능한 provider에 작업을 위임한다.  
 사용 Provider는 Provider를 상속한    
-AbstractUserDetailsAuthenticationProvider 를 상속한       
-DaoAuthenticationProvider를 사용한다.          
-     
-**DaoAuthenticationProvider**   
+AbstractUserDetailsAuthenticationProvider 를 상속한 DaoAuthenticationProvider를 사용한다.          
+           
+**AbstractUserDetailsAuthenticationProvider(DaoAuthenticationProvider)**   
 ```java
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
         Assert.isInstanceOf(UsernamePasswordAuthenticationToken.class, authentication,
                 () -> messages.getMessage(
                         "AbstractUserDetailsAuthenticationProvider.onlySupports",
                         "Only UsernamePasswordAuthenticationToken is supported"));
-        String username = (authentication.getPrincipal() == null) ? "NONE_PROVIDED" : authentication.getName();
+        
+	String username = (authentication.getPrincipal() == null) ? "NONE_PROVIDED" : authentication.getName();
         boolean cacheWasUsed = true;
         UserDetails user = this.userCache.getUserFromCache(username);
         if (user == null) {
             cacheWasUsed = false;
             try {
-                user = retrieveUser(username,
-                        (UsernamePasswordAuthenticationToken) authentication);
+                user = retrieveUser(username, (UsernamePasswordAuthenticationToken) authentication);
             }
             catch (UsernameNotFoundException notFound) {
                 logger.debug("User '" + username + "' not found");
-
                 if (hideUserNotFoundExceptions) {
                     throw new BadCredentialsException(messages.getMessage(
                             "AbstractUserDetailsAuthenticationProvider.badCredentials",
@@ -235,6 +233,7 @@ DaoAuthenticationProvider를 사용한다.
         return createSuccessAuthentication(principalToReturn, authentication, user);
     }
 ```
+
 
 provider(DaoAuthenticationProvider)는 인증이 성공되면 새로운 Authentication의 값을 반환을 하고 
 다시, `ProviderMange`는 알맞은 값을 세팅하고 다시 `UsernamePasswordAuthenticationFilter`값을 넘긴다.     
