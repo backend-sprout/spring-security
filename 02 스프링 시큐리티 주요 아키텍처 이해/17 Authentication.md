@@ -29,6 +29,71 @@ Authentication는 **당신이 누구인지를 증명하는 것이다.**
 
 ## 코드 
 
+**AbstractAuthenticationProcessingFilter**
+```java
+public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
+    HttpServletRequest request = (HttpServletRequest) req;
+    HttpServletResponse response = (HttpServletResponse) res;
+    
+    if (!requiresAuthentication(request, response)) {
+        chain.doFilter(request, response);
+	     return;
+    }
+    if (logger.isDebugEnabled()) {
+        logger.debug("Request is to process authentication");
+    }
+    Authentication authResult;
+    try {
+        authResult = attemptAuthentication(request, response);          // <----- 여기 -------- 
+        if (authResult == null) {
+	    return;
+        }
+        sessionStrategy.onAuthentication(authResult, request, response);
+    } catch (InternalAuthenticationServiceException failed) {
+        logger.error("An internal error occurred while trying to authenticate the user.", failed);
+	unsuccessfulAuthentication(request, response, failed);
+	return;
+    } catch (AuthenticationException failed) {
+        unsuccessfulAuthentication(request, response, failed);
+        return;
+    }
+    if (continueChainBeforeSuccessfulAuthentication) {
+        chain.doFilter(request, response);
+    }
+    successfulAuthentication(request, response, chain, +authResult);
+```
+UsernamePasswordAuthenticationFilter는 오버 라이딩하지 않은 `doFilter()`    
+즉, 상위 클래스인 AbstractAuthenticationProcessingFilter의 doFilter()를 실행하면서         
+UsernamePasswordAuthenticationFilter이 오버이딩한 `attemptAuthentication()`를 호출한다.      
+
+```java
+public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
+    if (postOnly && !request.getMethod().equals("POST")) { 
+        throw new AuthenticationServiceException("Authentication method not supported: " + request.getMethod());
+    }
+    String username = obtainUsername(request);
+    String password = obtainPassword(request);
+    if (username == null) {
+        username = "";
+    }
+    if (password == null) {
+        password = "";
+    }
+    username = username.trim();
+    UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(username, password);
+    setDetails(request, authRequest);
+    return this.getAuthenticationManager().authenticate(authRequest);
+}
+```
+이 과정에서 `Authentication`을 상속 받은 `AbstractAuthenticationToken`을 상속받은        
+`UsernamePasswordAuthenticationToken` 구현체를 통해 `Authentication`객체를 준비한다.(인증 false)       
+이후 `AuthenticationManger`의 구현체인 `x`의 `authenticate()`를 호출하면서 작업을 위임한다.   
+
+
+
+
+
+
 
 
 
