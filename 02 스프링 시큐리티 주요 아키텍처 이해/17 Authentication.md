@@ -87,7 +87,81 @@ public Authentication attemptAuthentication(HttpServletRequest request, HttpServ
 ```
 이 과정에서 `Authentication`을 상속 받은 `AbstractAuthenticationToken`을 상속받은        
 `UsernamePasswordAuthenticationToken` 구현체를 통해 `Authentication`객체를 준비한다.(인증 false)       
-이후 `AuthenticationManger`의 구현체인 `x`의 `authenticate()`를 호출하면서 작업을 위임한다.   
+이후 `AuthenticationManger`의 구현체인 `ProviderManger`의 `authenticate()`를 호출하면서 작업을 위임한다.       
+
+```java
+public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+    Class<? extends Authentication> toTest = authentication.getClass();
+    AuthenticationException lastException = null;
+    AuthenticationException parentException = null;
+    Authentication result = null;
+    Authentication parentResult = null;
+    boolean debug = logger.isDebugEnabled();
+
+    for (AuthenticationProvider provider : getProviders()) {
+        if (!provider.supports(toTest)) {
+            continue;
+        }
+
+        if (debug) {
+            logger.debug("Authentication attempt using " + provider.getClass().getName());
+        }
+
+        try {
+            result = provider.authenticate(authentication);
+	    
+            if (result != null) {
+                copyDetails(authentication, result);
+                break;
+            }
+        } catch (AccountStatusException e) {
+            prepareException(e, authentication);
+            throw e;
+        } catch (InternalAuthenticationServiceException e) {
+            prepareException(e, authentication);
+            throw e;
+        } catch (AuthenticationException e) {
+            lastException = e;
+        }
+    }
+
+    if (result == null && parent != null) {
+        // Allow the parent to try.
+        try {
+            result = parentResult = parent.authenticate(authentication);
+        } catch (ProviderNotFoundException e) {
+	
+        } catch (AuthenticationException e) {
+            lastException = parentException = e;
+        }
+    }
+
+    if (result != null) {
+        if (eraseCredentialsAfterAuthentication && (result instanceof CredentialsContainer)) {
+            ((CredentialsContainer) result).eraseCredentials();
+        }
+	
+        if (parentResult == null) {
+            eventPublisher.publishAuthenticationSuccess(result);
+        }
+        return result;
+    }
+
+    if (lastException == null) {
+        lastException = new ProviderNotFoundException(messages.getMessage(
+                "ProviderManager.providerNotFound",
+                new Object[]{toTest.getName()},
+                "No AuthenticationProvider found for {0}"));
+    }
+
+    if (parentException == null) {
+        prepareException(lastException, authentication);
+    }
+
+    throw lastException;
+}
+```
+
 
 
 
