@@ -15,7 +15,15 @@ Authentication는 **당신이 누구인지를 증명하는 것이다.**
 * **authorities :** 인증된 사용자의 권한 목록
 * **details :** 인증 부가 정보 
 * **Authenticated :** 인증 여부 
-* 
+
+## Authentication 흐름  
+  
+![image](https://user-images.githubusercontent.com/50267433/129443363-6e4e3d0d-b8ff-4774-a7cb-315917ab7975.png)
+  
+1. UserNamePasswordAuthenticationFilter 는 Request 정보를 받아서 Authentication 객체를 만든다.     
+2. AuthenticationManger(Provider) 가 인증 객체를 가지고 인증 처리를 진행한다.   
+3. 인증이 성공하면 :
+4. 인증이 실패하면 : 
 
 
 
