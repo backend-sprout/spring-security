@@ -111,8 +111,7 @@ public Authentication authenticate(Authentication authentication) throws Authent
 
         try {
             result = provider.authenticate(authentication);
-	    
-            if (result != null) {
+	    if (result != null) {
                 copyDetails(authentication, result);
                 break;
             }
@@ -128,7 +127,6 @@ public Authentication authenticate(Authentication authentication) throws Authent
     }
 
     if (result == null && parent != null) {
-        // Allow the parent to try.
         try {
             result = parentResult = parent.authenticate(authentication);
         } catch (ProviderNotFoundException e) {
@@ -163,6 +161,109 @@ public Authentication authenticate(Authentication authentication) throws Authent
     throw lastException;
 }
 ```
+
+```java
+   try {
+        result = provider.authenticate(authentication);
+	if (result != null) {
+           copyDetails(authentication, result);
+           break;
+        }
+   } 
+```
+`ProviderMange`는 자신이 참조하고 있는 여러 provider 중에 사용 가능한 provider에 작업을 위임한다.  
+사용 Provider는 Provider를 상속한    
+AbstractUserDetailsAuthenticationProvider 를 상속한       
+DaoAuthenticationProvider를 사용한다.          
+     
+**DaoAuthenticationProvider**   
+```java
+    public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+        Assert.isInstanceOf(UsernamePasswordAuthenticationToken.class, authentication,
+                () -> messages.getMessage(
+                        "AbstractUserDetailsAuthenticationProvider.onlySupports",
+                        "Only UsernamePasswordAuthenticationToken is supported"));
+        String username = (authentication.getPrincipal() == null) ? "NONE_PROVIDED" : authentication.getName();
+        boolean cacheWasUsed = true;
+        UserDetails user = this.userCache.getUserFromCache(username);
+        if (user == null) {
+            cacheWasUsed = false;
+            try {
+                user = retrieveUser(username,
+                        (UsernamePasswordAuthenticationToken) authentication);
+            }
+            catch (UsernameNotFoundException notFound) {
+                logger.debug("User '" + username + "' not found");
+
+                if (hideUserNotFoundExceptions) {
+                    throw new BadCredentialsException(messages.getMessage(
+                            "AbstractUserDetailsAuthenticationProvider.badCredentials",
+                            "Bad credentials"));
+                }
+                else {
+                    throw notFound;
+                }
+            }
+            Assert.notNull(user, "retrieveUser returned null - a violation of the interface contract");
+        }
+        try {
+            preAuthenticationChecks.check(user);
+            additionalAuthenticationChecks(user,
+                    (UsernamePasswordAuthenticationToken) authentication);
+        }
+        catch (AuthenticationException exception) {
+            if (cacheWasUsed) {
+                cacheWasUsed = false;
+                user = retrieveUser(username,
+                        (UsernamePasswordAuthenticationToken) authentication);
+                preAuthenticationChecks.check(user);
+                additionalAuthenticationChecks(user,
+                        (UsernamePasswordAuthenticationToken) authentication);
+            }
+            else {
+                throw exception;
+            }
+        }
+        postAuthenticationChecks.check(user);
+        if (!cacheWasUsed) {
+            this.userCache.putUserInCache(user);
+        }
+        Object principalToReturn = user;
+        if (forcePrincipalAsString) {
+            principalToReturn = user.getUsername();
+        }
+        return createSuccessAuthentication(principalToReturn, authentication, user);
+    }
+```
+
+provider(DaoAuthenticationProvider)는 인증이 성공되면 새로운 Authentication의 값을 반환을 하고 
+다시, `ProviderMange`는 알맞은 값을 세팅하고 다시 `UsernamePasswordAuthenticationFilter`값을 넘긴다.     
+`UsernamePasswordAuthenticationFilter`의 `attemptAuthentication()`는 다시 `doFilter()`에 값을 넘긴다.   
+   
+**UsernamePasswordAuthenticationFilter의 doFilter()**
+```java
+    try {
+        authResult = attemptAuthentication(request, response);          // <----- 여기 -------- 
+        if (authResult == null) {
+	    return;
+        }
+        sessionStrategy.onAuthentication(authResult, request, response);
+    } catch (InternalAuthenticationServiceException failed) {
+        logger.error("An internal error occurred while trying to authenticate the user.", failed);
+	unsuccessfulAuthentication(request, response, failed);
+	return;
+    } catch (AuthenticationException failed) {
+        unsuccessfulAuthentication(request, response, failed);
+        return;
+    }
+    if (continueChainBeforeSuccessfulAuthentication) {
+        chain.doFilter(request, response);
+    }
+    successfulAuthentication(request, response, chain, +authResult);
+```
+`doFilter()`는 넘어온 값이 null 인지 확인하고 
+
+
 
 
 
