@@ -296,11 +296,16 @@ SecurityContextHolder.getContext().setAuthentication(authResult);
   
 이후 부터는 `AbstractSecurityInterceptor` 인터셉터를 이용해서 값을 불러올 수 있는데    
 
+**AbstractSecurityInterceptor의 beforeInvocation()**
 ```java
 Authentication authenticated = authenticateIfRequired();
     try {
 	this.accessDecisionManager.decide(authenticated, object, attributes);
     }
+```
+
+```java
+
 ```
 
 
