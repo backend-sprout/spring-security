@@ -233,10 +233,12 @@ AbstractUserDetailsAuthenticationProvider 를 상속한 DaoAuthenticationProvide
         return createSuccessAuthentication(principalToReturn, authentication, user);
     }
 ```
+로직이 복잡하지만 `DaoAuthenticationProvider`는 인증이 성공되면 새로운 Authentication의 값을 반환을 한다.   
 
+```java
+```
 
-provider(DaoAuthenticationProvider)는 인증이 성공되면 새로운 Authentication의 값을 반환을 하고 
-다시, `ProviderMange`는 알맞은 값을 세팅하고 다시 `UsernamePasswordAuthenticationFilter`값을 넘긴다.     
+`ProviderMange`는 알맞은 값을 세팅하고 다시 `UsernamePasswordAuthenticationFilter`값을 넘긴다.     
 `UsernamePasswordAuthenticationFilter`의 `attemptAuthentication()`는 다시 `doFilter()`에 값을 넘긴다.   
    
 **UsernamePasswordAuthenticationFilter의 doFilter()**
