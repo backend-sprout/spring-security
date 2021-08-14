@@ -27,6 +27,8 @@ Authentication는 **당신이 누구인지를 증명하는 것이다.**
 4. ThreadLocal 에 존재하는 SecurityContext 안에 저장을 한다.    
 5. ThreadLocal 에 존재하기에 전역적으로 사용할 수 있게 된다.   
 
+## 코드 
+
 
 
 
