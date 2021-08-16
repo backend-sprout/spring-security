@@ -18,8 +18,8 @@ SecurityContext
 추가 설명을 하자면 기본적으로 SecurityContext 는 메인 스레드에 저장이 된다.      
 즉, 메인 스레드와 자식 스레드는 서로 다른 Trhead Local 을 사용하게 되고 공유가 안된다.        
 만약 공유가 필요하다면 `MODE_INHERITABLETHREADLOCAL` 또는 `MODE_GLOBAL`를 사용하면 된다.   
-
+   
 # 흐름 
-
+   
 ![image](https://user-images.githubusercontent.com/50267433/129456262-7aa6f06d-1eba-4e8c-b18d-0bed497f3577.png)
     
