@@ -72,10 +72,8 @@ public abstract class AbstractAuthenticationProcessingFilter {
 }
 ```
 인증 필터들을 위한 `추상화된 인증 필터 클래스`다.       
-단, LoginUrl을 판별하는 방식이 `requiresAuthenticationRequestMatcher`를 통해서 진행된다.         
-FormLogin 방식에서는 SecurityConfig로 설정한 값과 비교해주는 구현체를 사용한다고 추측된다.       
-
-
+단, LoginUrl을 판별하는 방식이 `requiresAuthenticationRequestMatcher`를 통해서 진행된다.           
+FormLogin 방식에서는 AntPathRequestMatcher를 사용하는데 SecurityConfig로 설정한 값과 비교해준다고 추측된다.        
 
 ## UsernamePasswordAuthenticationFilter
 ```java
