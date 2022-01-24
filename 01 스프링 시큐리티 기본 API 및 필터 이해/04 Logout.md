@@ -8,7 +8,24 @@
 # logout() 
 
 ```java
-http.logout()
+        http
+                .logout()
+                .logoutUrl("/logout")
+                .logoutSuccessUrl("/login")
+                .addLogoutHandler(new LogoutHandler() {
+                    @Override
+                    public void logout(final HttpServletRequest request, final HttpServletResponse response, final Authentication authentication) {
+                        HttpSession session = request.getSession();
+                        session.invalidate();
+                    }
+                })
+                .logoutSuccessHandler(new LogoutSuccessHandler() {
+                    @Override
+                    public void onLogoutSuccess(final HttpServletRequest request, final HttpServletResponse response, final Authentication authentication) throws IOException, ServletException {
+                        response.sendRedirect("/login");
+                    }
+                })
+                .deleteCookies("remember-me");
 ```
 * 로그아웃 기능이 작동하도록 한다.   
 
