@@ -37,5 +37,20 @@
 |`addLogoutHandler(new SomethingAddLogoutHandler())`|로그아웃 핸들러|
 |`logoutSuccessHandler(new SomethingLogoutSuccessHandler())`|로그아웃 성공 후 핸들러|
 
+# LogoutFilter
+
+![image](https://user-images.githubusercontent.com/50267433/150733440-865cf382-6d51-47ad-8fab-2b75843287ff.png)
+
+**간단 설명**   
+1. LogoutFilter 에서 AntPathRequestMatcher를 통해서 Logout URL 인지 매칭을 진행한다. 
+2. Logout URL이 아닌 경우, 다음 필터로 요청 흐름을 전송한다.    
+3. Logout URL인 경우, SecurityContext로 부터 Authentication 객체를 가져온다.    
+4. SecurityContextHandler 에 Authentication 객체를 전달한다.   
+5. 이후 필요에따라, `세션 무효화`, `쿠키 삭제`, `SecurityContextHolder.clearContext()`를 사용한다.   
+6. 위 작업이 끝나면, SimpleUrlLogoutSuccessHandler를 호출한다.   
+
+
+
+
 
 
