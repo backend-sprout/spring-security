@@ -40,6 +40,7 @@ Form Login 인증
                         response.sendRedirect("/login");
                     }
                 })
+                .permitAll();
 ```
 
 `http.formLogin()` 이후에 사용할 수있는 메서드들에 대해서 설명한다.
