@@ -25,7 +25,7 @@ Authentication 이 Null이 아닌 경우는 이미 사용자 인증 정보를 �
 ![image](https://user-images.githubusercontent.com/50267433/129193728-69784562-30b9-4ddf-baec-4378fae8b473.png)   
 
 RememberMeAuthenticationFilter는 **RememberMeService 구현체**를 불러와서 사용한다.   
-RememberMeService 구현체로는 2가지가 있는데 아래 설명을 보면 된다.    
+RememberMeService 구현체로는 아래 2가지가 있는데 아래 설명을 보면 된다.    
 
 * **TokenBasedRememberMeServices :** **메모리**에 RememberMe 쿠키(토큰)를 저장한 경우에 사용(기본 14일)     
 * **PersistenceTokenBasedRememberMeServices :** **DB**에 RememberMe 쿠키(토큰) 저장한 경우에 사용     
