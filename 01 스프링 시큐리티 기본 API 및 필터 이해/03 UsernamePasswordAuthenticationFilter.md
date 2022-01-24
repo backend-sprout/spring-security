@@ -2,6 +2,25 @@ UsernamePasswordAuthenticationFilter
 =====================================
 ![image](https://user-images.githubusercontent.com/50267433/129195153-19ea8143-277c-4d64-a0ba-14ad7544c1fc.png)
 
+
+* FormLogin 적용시, 적용되는 필터는 UsernamePasswordAuthenticationFilter 다.   
+* 필터의 `AntPathRequestMatcher(/login)`을 통해 요청 정보가 `로그인 프로세싱 URL`과 매칭되는지 확인한다.     
+    * 정확히 말하면, `AbstractAuthenticationProcessingFilter` 의    
+      `doFilter()` 과정 중에서 `requiresAuthentication()`를 통해 매칭 검증을 한다. 
+    * 매칭되지 않았다면 다음 필터로 작업을 넘긴다.   
+* 요청 정보의 데이터를 활용하여 Authentication 구현체를 생성한다.
+    * ```java
+      UsernamePasswordAuthenticationToken authRequest = 
+          new UsernamePasswordAuthenticationToken(username, password);
+      ```  
+* AuthenticationManager 구현체의 authenticate()를 호출하고 인자값으로 Authentication 구현체를 사용한다.   
+    * authenticate() 는 Authentication 구현체의 값이 올바른지 **인증 검증 작업을 진행한다.**   
+    * 즉, 해당 메서드를 통해 인증의 성공 및 실패가 결정된다.    
+    * ```java
+      this.getAuthenticationManager().authenticate(authRequest);
+      ``` 
+* 
+
 # 코드 
 ```java
 
