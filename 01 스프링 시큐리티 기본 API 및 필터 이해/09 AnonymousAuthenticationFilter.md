@@ -55,7 +55,7 @@ null 일 경우 return 이 아니라 `AnonymousAuthenticationToken`생성 및 �
 * 익명 : Login 페이지 보여주기 
 * 인증 : Logout 페이지 보여주기  
 
-## chain.doFilter(req, res); 이후 
+## AbstractSecurityInterceptor - AnonymousAuthenticationFilter 이후 
 `chain.doFilter(req, res);`로 이어지다가 마지막으로 실행되는 클래스는 `AbstractSecurityInterceptor`이다.       
 `AbstractSecurityInterceptor`의 `--Invocation()`관련 메서드 로직을 보면 아래와 같다.     
    
