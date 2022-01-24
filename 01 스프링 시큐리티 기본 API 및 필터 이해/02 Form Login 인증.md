@@ -15,7 +15,7 @@ Form Login 인증
 세션이 나와서 조금 의아하지만, 이 과정은 Form 인증 과정이다.(서버와 클라이언트가 분리 안된 구조)       
 그렇기에 세션을 통해서 인증정보를 저장하고 있다.(SecuritContextHolder 를 세션 기준으로 사용했을 것이다.)     
 
-# formLogin
+# formLogin()
 
 ```java
         http
@@ -43,7 +43,7 @@ Form Login 인증
                 .permitAll();
 ```
 
-`http.formLogin()` 이후에 사용할 수있는 메서드들에 대해서 설명한다.
+* `http.formLogin()` 이후에 사용할 수있는 메서드들에 대해서 설명한다.
  
 |메서드|설명|  
 |----|----|  
