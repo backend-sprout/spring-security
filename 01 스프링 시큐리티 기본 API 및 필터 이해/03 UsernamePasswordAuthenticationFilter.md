@@ -19,7 +19,13 @@ UsernamePasswordAuthenticationFilter
     * ```java
       this.getAuthenticationManager().authenticate(authRequest);
       ``` 
-* 
+* authenticate()가 실행되면서 내부적으로 AuthenticationProvider 에게 인증 검증 작업을 위임한다.  
+    * 인증에서 실패하면, AuthenticationException 을 발생하고 필터에서 try/catch 한다.    
+* AuthenticationProvider가 인증에 성공하게 되면, Authentication 구현체를 만들고 반환한다.      
+    * 인증에 성공한 정보(User 정보) + 인가 정보를 가지고 있는 Authentication 구현체이다.    
+* AuthenticationManager 는 전달받은 Authentication 구현체를 필터에 반환한다.  
+* 필터는 SecurityContext 에 저장한다.(전역적으로 사용가능)       
+* 이후 SuccessHandler를 호출한다.  
 
 # 코드 
 ```java
