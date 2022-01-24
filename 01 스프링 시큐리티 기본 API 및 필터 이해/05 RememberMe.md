@@ -13,7 +13,12 @@
 
 
 ```java
-http.rememberMe()
+        http
+                .rememberMe()
+                .rememberMeParameter("remember")
+                .tokenValiditySeconds(3600)
+                .alwaysRemember(false)
+                .userDetailsService(userDetailsService());
 ```
 
 * 리멤버미 기능을 활성화시킨다.   
