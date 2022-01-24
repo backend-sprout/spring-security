@@ -16,8 +16,44 @@ Form Login 인증
 그렇기에 세션을 통해서 인증정보를 저장하고 있다.(SecuritContextHolder 를 세션 기준으로 사용했을 것이다.)     
 
 # formLogin
-  
-![image](https://user-images.githubusercontent.com/50267433/129194774-34a48278-77a8-48a8-976d-1e325e9c746e.png)
+
+```java
+        http
+                .formLogin()
+                .loginPage("/loginPage")
+                .defaultSuccessUrl("/")
+                .failureUrl("/login")
+                .usernameParameter("userId")
+                .passwordParameter("passwd")
+                .loginProcessingUrl("/login_proc")
+                .successHandler(new AuthenticationSuccessHandler() {
+                    @Override
+                    public void onAuthenticationSuccess(final HttpServletRequest request, final HttpServletResponse response, final Authentication authentication) throws IOException, ServletException {
+                        System.out.println("authentication = " + authentication.getName());
+                        response.sendRedirect("/");
+                    }
+                })
+                .failureHandler(new AuthenticationFailureHandler() {
+                    @Override
+                    public void onAuthenticationFailure(final HttpServletRequest request, final HttpServletResponse response, final AuthenticationException exception) throws IOException, ServletException {
+                        System.out.println("exception = " + exception.getMessage());
+                        response.sendRedirect("/login");
+                    }
+                })
+```
+
+`http.formLogin()` 이후에 사용할 수있는 메서드들에 대해서 설명한다.
+ 
+|메서드|설명|  
+|----|----|  
+|`.loginPage("/login.html")`|사용자 정의 로그인| 
+|`.defaultSuccessUrl("/home")`|로그인 성공 후 이동 페이지|  
+|`.failureUrl("/login.html?error=true")`|로그인 실패 후 이동 페이지|   
+|`.usernameParameter("username")`|아이디 파라미터 설정|  
+|`.passwordParameter("password")`|패스워드 파라미터 설정|  
+|`.loginProcessingUrl("/login")`|로그인 Form Action Url|   
+|`.successHandler(new SomethingLoginSucessHandler())`|로그인 성공 후 핸들러|   
+|`.failureHandler(new LoginFailureHandler())`|로그인 실패 후 핸들러|   
 
 
 # Http Basic  
