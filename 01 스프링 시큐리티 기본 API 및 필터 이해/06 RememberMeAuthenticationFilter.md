@@ -44,6 +44,7 @@ RememberMeService 구현체들은 저장소 및 사용자의 RememberMe 쿠키(�
  
 ### 📄 양측 Token 비교   
 양측의 토큰을 비교해서 일치하지 않으면 Exception을 발생시킨다.  
+(서버도 토큰을 저장한다.)    
 
 ### 📄 User 계정 존재 여부 파악   
 Token에 들어있는 사용자 정보를 통해서 메모리/DB에서 User 정보를 조회해본다.     
