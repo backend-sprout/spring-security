@@ -67,8 +67,9 @@ if (SecurityContextHolder.getContext().getAuthentication() == null) {
         object, attributes);
 }
 ```
-즉, 시큐리티 컨텍스트에서 Authentication 객체를 꺼내서 null인지 아닌지를 검증한다.   
-그리고 `AnonymousAuthenticationToken`는 이러한 로직을 수행하기 위해서 존재한다고 이해하면 된다.   
+시큐리티 컨텍스트에서 Authentication 객체를 꺼내서 null인지 아닌지를 검증한다.    
+null일 경우 예외를 발생시키는 메서드를 호출하는데  
+`AnonymousAuthenticationToken`는 이러한 로직을 피하기 위해서 존재한다고 이해하면 된다.   
 
 ```java
 private Authentication authenticateIfRequired() {
