@@ -23,4 +23,4 @@ http.rememberMe()
 |`rememberMeParameter("rememberMe")`|기본 파라미터명은 remember-me|
 |`tokenValiditySeconds(3600)`|Default는 14일|
 |`alwaysRemember(true)`|리멤버 미 기능이 활성화 되지 않아도 항상 실행|
-|`userDetailsService(new SomethingUserDetailsService())`||
+|`userDetailsService(new SomethingUserDetailsService())`|리멤버미 기능을 수행할때, 시스템에 있는 사용자의 계저 조회시 사용|   
