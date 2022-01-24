@@ -13,9 +13,27 @@ UsernamePasswordAuthenticationFilter
 8. AuthenticationFilter는 Authentication 객체가 NULL 인지 판단한다.     
 9. 반환된 Authentication 객체가 NULL이 아니면, SecurityContext 에 저장한다.   
 10. 이후 SuccessHandler를 호출한다.      
-  
-# 코드    
-## AbstractAuthenticationProcessingFilter  
+
+**실제 객체 이름 기반은 아래와 같다.**  
+1. FormLogin은 UsernamePasswordAuthenticationFilter 를 인증 필터로 사용한다.         
+2. UsernamePasswordAuthenticationFilter 는 `requiresAuthentication()`를 통해 URL 검증을한다.   
+3. `requiresAuthentication()`내부는 RequestMatcher 구현체인 AntPathRequestMatcher 에게 작업을 위임한다.  
+4. AntPathRequestMatcher 는 `match()`를 통해 로그인 URL인지 검증한다.   
+5. 로그인 URL 매치이 성공했다면, `attemptAuthentication()`를 통해 인증 검증을 진행한다.    
+6. `attemptAuthentication()`에서는 요청 정보에 따라 Authentication의 구현체인  
+    UsernamePasswordAuthenticationToken 를 만든다.   
+7. 이후, `getAuthenticationManager()`를 통해 AuthenticationManager의 하위 구현체인 ProviderManager 를 가져온다.  
+8. ProvierManger 의 `authenticate()`를 통해 인증작업을 하고, 인자 값으로 UsernamePasswordAuthenticationToken를 준다.   
+9. ProvierManger 의 `authenticate()`는 사용가능한 Provider 를 목록에서 조회한다.    
+10. 사용 가능한 Provier는 `authentication()`를 호출하고 UsernamePasswordAuthenticationToken를 넘긴다. 
+11. 내부 메서드에서 인증 과정에 대해서 처리한다.   
+12. 실패시 doFilter() 에서 try/catch가 발생한다.   
+13. 성공시 새로운 Authentication 구현체를 만드는데, `인증에 성공한 정보(User 정보)` + `인가 정보`를 가지고 만든다.   
+14. 생성된 Authentication 구현체는 Filter 까지 반환된다.   
+15. Filter는 Null인지 검증하고, 아니라면 SecurityContext에 저장한다.   
+16. 이후 SuccessHandler를 호출한다.    
+
+# AbstractAuthenticationProcessingFilter  
 ```java
 public abstract class AbstractAuthenticationProcessingFilter {
     ... // 생략 	
@@ -76,54 +94,3 @@ public abstract class AbstractAuthenticationProcessingFilter {
 이때 구현체로 AntPathRequestMatcher를 사용하는데 SecurityConfig로 설정한 값으로 생성되고 이를 통해 비교 작업을 한다고 추측된다.    
 
 * **만약, session 기반이 아니라면 이에 대해서 어떻게 처리하는지 살펴봐야될 것 같다.**   
-
-## UsernamePasswordAuthenticationFilter
-```java
-public class UsernamePasswordAuthenticationFilter extends AbstractAuthenticationProcessingFilter {
-    ... // 생략 
-    public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
-        if (postOnly && !request.getMethod().equals("POST")) { 
-            throw new AuthenticationServiceException("Authentication method not supported: " + request.getMethod());
-        }
-        String username = obtainUsername(request);
-        String password = obtainPassword(request);
-        if (username == null) {
-            username = "";
-        }
-        if (password == null) {
-            password = "";
-        }
-        username = username.trim();
-        UsernamePasswordAuthenticationToken authRequest = new UsernamePasswordAuthenticationToken(username, password);
-        // Allow subclasses to set the "details" property
-        setDetails(request, authRequest);
-        return this.getAuthenticationManager().authenticate(authRequest);
-    }
-    
-    ... // 생략 
-}    
-```
-
-* FormLogin은 UsernamePasswordAuthenticationFilter 를 기본 인증 필터로 사용한다.       
-* 필터의 `AntPathRequestMatcher(/login)`을 통해 요청 정보가 `로그인 프로세싱 URL`과 매칭되는지 확인한다.     
-    * 정확히 말하면, `AbstractAuthenticationProcessingFilter` 의    
-      `doFilter()` 과정 중에서 `requiresAuthentication()`를 통해 매칭 검증을 한다. 
-    * 매칭되지 않았다면 다음 필터로 작업을 넘긴다.   
-* 요청 정보의 데이터를 활용하여 Authentication 구현체를 생성한다.
-    * ```java
-      UsernamePasswordAuthenticationToken authRequest = 
-          new UsernamePasswordAuthenticationToken(username, password);
-      ```  
-* AuthenticationManager 구현체의 authenticate()를 호출하고 인자값으로 Authentication 구현체를 사용한다.   
-    * authenticate() 는 Authentication 구현체의 값이 올바른지 **인증 검증 작업을 진행한다.**   
-    * 즉, 해당 메서드를 통해 인증의 성공 및 실패가 결정된다.    
-    * ```java
-      this.getAuthenticationManager().authenticate(authRequest);
-      ``` 
-* authenticate()가 실행되면서 내부적으로 AuthenticationProvider 에게 인증 검증 작업을 위임한다.  
-    * 인증에서 실패하면, AuthenticationException 을 발생하고 AbstractAuthenticationProcessingFilter에서 catch 한다.    
-* AuthenticationProvider가 인증에 성공하게 되면, Authentication 구현체를 만들고 반환한다.      
-    * 인증에 성공한 정보(User 정보) + 인가 정보를 가지고 있는 Authentication 구현체이다.    
-* AuthenticationManager 는 전달받은 Authentication 구현체를 필터에 반환한다.  
-* 필터는 SecurityContext 에 저장한다.(전역적으로 사용가능)       
-* 이후 SuccessHandler를 호출한다.  
