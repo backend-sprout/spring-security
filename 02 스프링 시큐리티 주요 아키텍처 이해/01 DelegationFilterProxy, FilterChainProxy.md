@@ -36,7 +36,7 @@ DelegatingFilterProxy 는 요청을 받아서 이를 다른 프레임워크에 �
 2. DelegatingFilterProxy는 특정한 이름을 가진 스프링 빈을 찾아 그 빈에게 요청을 위임할 수 있다.       
     * springSecurityFilterChain 이름으로 생성된 빈을 ApplicationContext에서 찾아 요청을 위임한다.    
     * DelegatingFilterProxy 자체는 실제 보안처리를 하지 않는다.     
-
+  
 # FilterChainProxy 
 
 1.
