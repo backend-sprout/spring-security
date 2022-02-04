@@ -1,22 +1,21 @@
 # DelegationFilterProxy
+      
+Filter는 Servlet 스펙에 정의된 기술로서         
+**Servlet 기반의 웹 애플리케이션들은 ServletFilter를 사용할 수 있다.**          
 
-Servlet 필터는 Servlet 스펙에 정의된 기술로서   
-Servlet 기반의 웹 애플리케이션들은 ServletFilter를 사용할 수 있다.     
-
-요청에 대해서 Servlet 이 처리하기전에 ServletFilter 가 전처리를 해주고     
-응답에 대해서도 Servlet 으로 반환된 값을 Filter가 후처리를 해줄 수도 있다.     
-   
+**Servlet Filter의 장점**
+* 요청에 대해서 Servlet 이 처리하기전에 ServletFilter가 전처리 가능하다.    
+* 응답에 대해서 Servlet 으로 부터 반환된 값을 Filter가 후처리 가능하다.             
+    
 <img width="1078" alt="스크린샷 2022-01-25 오후 4 28 28" src="https://user-images.githubusercontent.com/50267433/150930780-fa0adc81-573e-4d9f-bfb3-51a0b656d2fd.png">
   
-그러나 ServletFilter 는 Servlet 스펙이며 이를 지원하는 ServletContainer 에서 생성되고 실행된다.     
-반대로 Spring Bean 들은 Spring Container 에서 동작하기에    
-**Servlet Filter 는 Spring 에서 정의된 빈을 주입해서 사용할 수 없다는 문제가 발생한다.**    
-    
-즉, ServletFilter 에서 Spring Bean을 주입 받을 수 없으며, Spring과 관련된 기능을 활용할 수 없다는 뜻이기도 하다.       
-    
-그러나 이전 강의들의 보안처리 과정을 돌이켜보면,        
-Spring Security는 사용자가 요청한 모든 요청에 대해서 Filter 기반을 인증/인가 처리하고 있다.      
-그리고 이 과정에서 Spring의 빈을 주입받고 Spring에서 사용하는 기술들을 사용할 수 있었다.   
+그러나, 한가지 유념할 점은 ServletFilter는 Servlet 스펙이기에 ServletContainer 에서 생성되고 실행된다.        
+즉, 기존에 우리가 사용하는 Spring과 SpringContainer와 별개의 영역에서 사용되고 관리된다는 점이다.     
+이는 곧, 서로의 영역에 존재하는 빈을 가져와서 사용할 수 없다는 점이기도하다.(서블릿은 스프링 기능 제공 못받음)  
+  
+**그런데 Spring Security에서 Filter 클래스를 사용하던 것 같은데?🤔**       
+* Spring Security는 사용자가 요청한 모든 요청에 대해서 Filter 기반을 인증/인가 처리하고 있다.      
+* 그리고 이 과정에서 Spring의 빈을 주입받고 Spring에서 사용하는 기술들을 사용할 수 있었다.   
  
 Spring Security 에서는 필터 기반으로 보안처리를 해야하기 때문에 빈 형식으로 Filter를 구현했다.        
 그런데, 사용자가 요청을 하면 현재는 Servlet 기반으로 동작하기 때문에 그 요청을 ServletFilter로 받게된다.     
