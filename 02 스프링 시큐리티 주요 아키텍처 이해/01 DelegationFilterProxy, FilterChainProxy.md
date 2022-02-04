@@ -16,15 +16,14 @@ Filter는 Servlet 스펙에 정의된 기술로서
 **그런데 Spring Security에서 Filter 클래스를 사용하던 것 같은데?🤔**       
 * Spring Security는 사용자가 요청한 모든 요청에 대해서 Filter 기반을 인증/인가 처리하고 있다.      
 * 그리고 이 과정에서 Spring의 빈을 주입받고 Spring에서 사용하는 기술들을 사용할 수 있었다.   
- 
-Spring Security 에서는 필터 기반으로 보안처리를 해야하기 때문에 빈 형식으로 Filter를 구현했다.        
-그런데, 사용자가 요청을 하면 현재는 Servlet 기반으로 동작하기 때문에 그 요청을 ServletFilter로 받게된다.     
-즉, Filter를 빈 형식으로 구현해도 Servlet 스펙에서는 바로 사용하지 못한다는 문제가 있다.(Filter가 빈이므로)      
-
-**어떻게 해결해야할까?**   
-ServletFilter 에서 요청을 받는 것은 변경할 수 없는 작업이다.     
-그렇기에 ServletFilter에서 Bean으로만든 Filter로 요청 흐름을 넘길수 있는 구조를 만들어야한다.    
-바로 이러한 문제를 해결하기 위해 DelegatingFilterProxy 를 사용하여 요청을 위임하면 된다.    
+   
+다시 말하지만, Filter는 Servlet 스펙이기에 원래는 Spring 에서 사용이 쉽지않다.       
+그렇기에 별다른 작업 없이 Filter를 Spring Bean 으로 등록한다면 Spring 환경에서 사용되지 않을 것이다.  
+     
+**그렇다면 어떻게 해결해야할까?🤔**   
+* ServletFilter 에서 요청을 받는 것은 변경할 수 없는 작업이다.       
+* 그렇기에 ServletFilter에서 Bean으로 만든 Filter로 요청 흐름을 넘길수 있는 구조를 만들어야한다.      
+* 바로 이러한 문제를 해결하기 위해 **DelegatingFilterProxy 를 사용하여 요청을 위임하면 된다.**      
    
 **DelegatingFilterProxy** 는 Servlet 스펙의 클래스이다.(스프링이 아니다)         
 DelegatingFilterProxy 는 요청을 받아서 이를 다른 프레임워크에 위임할 수 있는 기능을 가지고 있다.      
