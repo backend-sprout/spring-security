@@ -41,9 +41,21 @@ Filter는 Servlet 스펙에 정의된 기술로서
 
 
 # FilterChainProxy 
-    
-1. springSecurityFilterChain 의 이름으로 생성되는 필터 빈이다.   
-2.   
+
+![image](https://user-images.githubusercontent.com/50267433/152535873-18a0a780-9c38-4f5d-896c-7df549669429.png)
+
+1. springSecurityFilterChain 의 이름으로 생성되는 필터 빈이다.     
+2. DelegatingFilterProxy로부터 요청을 위임받고 실제 보안처리를 한다.      
+3. Spring Security 초기화시 생성되는 필터들을 관리하고 제어한다.  
+    * 스프링 시큐리티가 기본적으로 생성하는 필터
+    * 설정 클래스에서 API 추가시 생성되는 필터
+4. 사용자의 요청을 필터 순서대로 호출하여 전달한다.  
+5. 사용자 정의 필터를 생성해서, 기존의 필터 전/후로 추가할 수 있다.  
+    * 필터의 순서를 잘 정의 
+6. 마지막 필터까지 인증 및 인가 예외가 발생하지 않으면 보안을 통과한다.  
+
+
+
 
 
 
