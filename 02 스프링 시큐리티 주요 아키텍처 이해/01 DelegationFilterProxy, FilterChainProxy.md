@@ -24,10 +24,11 @@ Filter는 Servlet 스펙에 정의된 기술로서
 * ServletFilter 에서 요청을 받는 것은 변경할 수 없는 작업이다.       
 * 그렇기에 ServletFilter에서 Bean으로 만든 Filter로 요청 흐름을 넘길수 있는 구조를 만들어야한다.      
 * 바로 이러한 문제를 해결하기 위해 **DelegatingFilterProxy 를 사용하여 요청을 위임하면 된다.**      
-   
-**DelegatingFilterProxy** 는 Servlet 스펙의 클래스이다.(스프링이 아니다)         
-DelegatingFilterProxy 는 요청을 받아서 이를 다른 프레임워크에 위임할 수 있는 기능을 가지고 있다.      
-즉, DelegatingFilterProxy 을 통해 요청이 위임되고 우리가 아는 Spring Security의 보안 로직이 동작하는 것이다.   
+          
+**💡 DelegatingFilterProxy**         
+* **Servlet 스펙의 클래스**이다.                
+* 요청을 받아서 이를 **다른 프레임워크에 위임할 수 있는 기능을 가지고 있다.**          
+* 즉, DelegatingFilterProxy 을 통해 요청이 위임되고 Spring Security의 보안 로직이 동작하는 것이다.     
 
 **정리**   
 1. 서블릿 필터는 스프링에서 정의된 빈을 주입해서 사용할 수 없다.      
