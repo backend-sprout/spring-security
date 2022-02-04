@@ -57,6 +57,20 @@ Filter는 Servlet 스펙에 정의된 기술로서
 실은 각각의 필터로 넘어갈 때마다, 실제 그 필터로 가는 것이 아니라      
 FilterChainProxy를 거치고 이후 필터로 이동하는 구조라는 것을 기억하자    
 
+![image](https://user-images.githubusercontent.com/50267433/152537120-20133312-71b4-4b34-9f11-69fce75a9c7b.png)
+
+* 왼쪽 영역 : Servlet Container 로 Servlet 스펙을 지원한다.     
+* 오른쪽 영역 : Spring Container 로 Spring 빈들을 관리한다.    
+  
+1. 사용자가 요청하면, Servlet Container 가 가장 먼저 요청을 받게된다.    
+2. 요청에 대해서 Filter들이 동작한다.     
+3. DelegatingFilterProxy 가 요청을 받게되면,   
+   전달 받았던 요청 객체를 springSecurityFilterChain 에게 위임한다.   
+   FilterChainProxy라는 객체가 springSecurityFilterChain 이름으로 등록되어있다.   
+4. FilterChainProxy는 내부에 `List<>`로 가지고 있는 필터들을 하나씩 호출한다.     
+5. 만약 모든 필터의 보안처리가 완료된다면 DispatcherServlet 에게 요청을 전달한다.     
+6. 만약 필터 중 하나가 보안처리가 완료되지 않았다면, 요청을 넘기지 않고 예외처리 로직을 수행할 수 있다.     
+
 
 
 
