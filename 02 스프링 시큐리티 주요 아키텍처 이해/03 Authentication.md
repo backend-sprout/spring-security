@@ -333,3 +333,4 @@ SecurityContextHolder.getContext().setAuthentication(authResult);
 `this.accessDecisionManager.decide(authenticated, object, attributes);`를 통해 **인가 검증**도 진행한다.     
 
 test
+ 
