@@ -331,6 +331,3 @@ SecurityContextHolder.getContext().setAuthentication(authResult);
 이후 부터는 `AbstractSecurityInterceptor` 인터셉터를 이용해서 값을 불러올 수 있는데           
 추가적인 인증 과정을 거치지 않고  SecurityContext 에서 Authetication 이 존재한다면 이를 가져오고       
 `this.accessDecisionManager.decide(authenticated, object, attributes);`를 통해 **인가 검증**도 진행한다.     
-
-test
- 
